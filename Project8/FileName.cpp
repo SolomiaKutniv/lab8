@@ -7,50 +7,58 @@ using namespace std;
 int main()
 {
     setlocale(LC_ALL, "Ukrainian");
+    srand(time(0));
     int n = 7;
     vector<int> arr(n);
     for (int i = 0; i < n; ++i)
     {
-        arr[i] = rand() % 21 - 10;
+        arr[i] = rand() % 100-50;
     }
 
-    cout << "Масив: ";
+    cout << "РњР°СЃРёРІ: ";
     for (int i = 0; i < n; ++i)
     {
         cout << arr[i] << " ";
     }
     cout << endl;
 
-    auto min_abs_iter = min_element(arr.begin(), arr.end(), [](int a, int b) {
-        return abs(a) < abs(b);
-        });
-    int min_abs_idx = distance(arr.begin(), min_abs_iter);
-    cout << "Номер мінімального за модулем елемента: " << min_abs_idx << endl;
-
-    int sum_after_negative = 0;
-    bool found_negative = false;
+    vector<int> abs_arr(n);
     for (int i = 0; i < n; ++i)
+    {
+        abs_arr[i] = abs(arr[i]);
+    }
+
+    auto miniter = min_element(abs_arr.begin(), abs_arr.end());
+    int minidx = distance(abs_arr.begin(), miniter);
+    cout << "РњС–РЅС–РјР°Р»СЊРЅРёР№ РїРѕ РјРѕРґСѓР»СЋ РµР»РµРјРµРЅС‚: " << arr[minidx] << endl;
+
+
+    int sum = 0;
+    bool found_negative = false;
+    for (int i = 0; i < n; i++)
     {
         if (arr[i] < 0 && !found_negative)
         {
             found_negative = true;
         }
-        if (found_negative)
+        else if (found_negative)
         {
-            sum_after_negative += abs(arr[i]);
+            sum += abs(arr[i]);
         }
     }
-    cout << "Сума модулів елементів після першого від’ємного: " << sum_after_negative << endl;
+    cout << "РЎСѓРјР° РјРѕРґСѓР»С–РІ РµР»РµРјРµРЅС‚С–РІ РїС–СЃР»СЏ РїРµСЂС€РѕРіРѕ РІС–РґвЂ™С”РјРЅРѕРіРѕ: " << sum << endl;
 
-    arr.erase(remove_if(arr.begin(), arr.end(), [](int x) { return abs(x) <= 1; }), arr.end());
+    int a = 2, b = 15;
 
-  
-    size_t original_size = n; 
-    arr.resize(original_size, 0); 
+    auto it = partition(arr.begin(), arr.end(), [a, b](int x) 
+        {
+        return x < a || x > b;  
+        });
 
-    // Виведення стиснутого масиву
-    cout << "Масив після стискання: ";
-    for (int i = 0; i < arr.size(); ++i)
+    fill(it, arr.end(), 0);
+
+    cout << "РњР°СЃРёРІ РїС–СЃР»СЏ СЃС‚РёСЃРєР°РЅРЅСЏ: ";
+    for (size_t i = 0; i < arr.size(); i++) 
     {
         cout << arr[i] << " ";
     }
@@ -58,4 +66,3 @@ int main()
 
     return 0;
 }
-
